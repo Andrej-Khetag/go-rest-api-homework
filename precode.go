@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -60,17 +59,19 @@ func getTasks(w http.ResponseWriter, r *http.Request) {
 func postTasks(w http.ResponseWriter, r *http.Request) {
 
 	var task Task
-	var buf bytes.Buffer
 
-	_, err := buf.ReadFrom(r.Body)
-	if err != nil {
+	//попробовал использовать 'json.Decoder'
+	//не уверен до конца, что всё правильно, на тестах вроде всё было хорошо
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&task); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err = json.Unmarshal(buf.Bytes(), &task); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+	//Добавил проверку на существование задачи
+	_, ok := tasks[task.ID]
+	if ok {
+		http.Error(w, "Задача уже есть", http.StatusBadRequest)
 	}
 
 	tasks[task.ID] = task
