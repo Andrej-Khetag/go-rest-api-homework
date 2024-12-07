@@ -1,3 +1,6 @@
+/* Антон, здравствуйте! Запутался в GitHube, плюс на самом практикуме одновременно дали 2 инструкции. Плавать очень сильно в GitHube, если опять отправил не ту ссылку,
+простите. Если знаете хороший ютуб-канал/курс и опосоветуете — буду очень рад и благодарен */
+
 package main
 
 import (
@@ -63,7 +66,8 @@ func postTasks(w http.ResponseWriter, r *http.Request) {
 	//попробовал использовать 'json.Decoder'
 	//не уверен до конца, что всё правильно, на тестах вроде всё было хорошо
 	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&task); err != nil {
+	err := decoder.Decode(&task)
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
