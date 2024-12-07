@@ -66,8 +66,7 @@ func postTasks(w http.ResponseWriter, r *http.Request) {
 	//попробовал использовать 'json.Decoder'
 	//не уверен до конца, что всё правильно, на тестах вроде всё было хорошо
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&task)
-	if err != nil {
+	if err := decoder.Decode(&task); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
